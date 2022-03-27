@@ -1,6 +1,8 @@
 package eu.mrndesign.matned.client.model.tools;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static eu.mrndesign.matned.client.controller.Constants.PANEL_HEIGHT_INT;
@@ -62,34 +64,49 @@ public class Bounds2D {
 //
 //        return results.stream().anyMatch(r -> r <= aToBVector.magnitude());
 
-        final double[] vLength = {0};
+        double result = 0;
         Vector2D connectVector = new Vector2D(center, b.center);
 
-        Map<Double, Vector2D> map = new HashMap<>();
-        map.putAll(minAngleAndVector(connectVector, this));
-        map.putAll(minAngleAndVector(connectVector, b));
-        map.forEach((angle, vector) -> {
-            vLength[0] += vector.magnitude() / Math.cos(angle);
-        });
+        List<Double> angles = new ArrayList<>();
+        List<Vector2D> vectors = new ArrayList<>();
 
-        return vLength[0] < connectVector.magnitude();
+        Map<Double, Vector2D> doubleVector2DMap = minAngleAndVector(connectVector, this);
+        Map<Double, Vector2D> doubleVector2DMap1 = minAngleAndVector(connectVector, b);
+        angles.addAll(doubleVector2DMap.keySet());
+        angles.addAll(doubleVector2DMap1.keySet());
+        vectors.addAll(doubleVector2DMap.values());
+        vectors.addAll(doubleVector2DMap1.values());
+
+        for (int i = 0; i < 2; i++) {
+            result += vectors.get(i).magnitude()/Math.cos(angles.get(i));
+        }
+
+        return result <= center.distanceFrom(b.center);
 
     }
 
     public Map<Double, Vector2D> minAngleAndVector(Vector2D connectVector, Bounds2D bounds) {
 
-        Vector2D aV90 = bounds.vector.rotated(90);
+        Vector2D v = new Vector2D(bounds.vector).newNormalized().withMagnitude(height/2);
+        Vector2D aV90 = v.rotated(90).newNormalized().withMagnitude(width/2);
+        Vector2D aV180 = aV90.rotated(90).newNormalized().withMagnitude(height/2);
+        Vector2D aV270 = aV180.rotated(90).newNormalized().withMagnitude(width/2);
 
         Map<Double, Vector2D> results = new HashMap<>();
-        double a = bounds.vector.angleTo(connectVector);
-        results.put(a, bounds.vector);
-        double b = aV90.angleTo(connectVector);
+        double a = Math.abs(180 - v.angleTo(connectVector));
+        results.put(a, v);
+        double b = Math.abs(180 - aV90.angleTo(connectVector));
         results.put(b, aV90);
+        double c = Math.abs(180 - aV180.angleTo(connectVector));
+        results.put(c, aV180);
+        double d = Math.abs(180 - aV270.angleTo(connectVector));
+        results.put(d, aV270);
 
         Map<Double, Vector2D> result = new HashMap<>();
-        double min = Math.min(a, b);
+        double min = Math.min(Math.min(Math.min(a, b), c), d);
+
         result.put(min, results.get(min));
-        return result;
+         return result;
     }
 
     public double leftBorder() {

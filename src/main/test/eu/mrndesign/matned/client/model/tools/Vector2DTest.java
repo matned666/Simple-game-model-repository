@@ -201,6 +201,28 @@ class Vector2DTest {
     }
 
 
+    @Test
+    void angleTo3(){
+        Point2D zero = new Point2D(6,2);
+        Vector2D v1 = new Vector2D(zero, new Point2D(3,8));
+        Vector2D v2 = new Vector2D(zero, new Point2D(6,4));
+
+        assertNotEquals(v1.angleTo(v2), v2.angleTo(v1));
+
+    }
+
+    @Test
+    void angleAfterRotation() {
+        Vector2D v1 = new Vector2D(new Point2D(3, 8), new Point2D(0,11));
+        Vector2D v2 = new Vector2D(new Point2D(3, 8), new Point2D(6,2));
+        Vector2D vRotated = v1.rotated(90);
+
+        System.out.println(v2.angleTo(vRotated));
+
+
+
+
+    }
 
 
 

@@ -138,7 +138,7 @@ public class Vector2D extends Point2D{
         return result;
     }
 
-    public Vector2D magnituded(double v) {
+    public Vector2D withMagnitude(double v) {
         Point2D point = Point2D.zero();
         point.move(this, v);
         return new Vector2D(point);

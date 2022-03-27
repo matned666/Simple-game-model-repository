@@ -38,32 +38,37 @@ class Bounds2DTest {
     @Test
     void  anotherTouchedTest() {
         Point2D aCenter = new Point2D(3, 8);
-        Vector2D vAHeight = new Vector2D(aCenter, new Point2D(0,11));
-        Vector2D aPerp = new Vector2D(aCenter, new Point2D(5,10));
-        Bounds2D a = new Bounds2D(vAHeight, vAHeight.magnitude(), aPerp.magnitude(), aCenter);
+        Point2D aV1 = new Point2D(0, 11);
+        Point2D aV2 = new Point2D(5, 10);
+        Vector2D vAHeight = new Vector2D(aCenter, aV1);
+        Bounds2D a = new Bounds2D(vAHeight, aCenter.distanceFrom(aV1), aCenter.distanceFrom(aV2), aCenter);
 
         Point2D bCenter = new Point2D(6, 2);
-        Vector2D vBHeight = new Vector2D(bCenter, new Point2D(2,2));
-        Vector2D bPerp = new Vector2D(bCenter, new Point2D(6,4));
-        Bounds2D b = new Bounds2D(vBHeight, vBHeight.magnitude(), bPerp.magnitude(), bCenter);
+        Point2D bV1 = new Point2D(2, 2);
+        Point2D bV2 = new Point2D(6, 4);
+        Vector2D vBHeight = new Vector2D(aCenter, aV1);
+        Bounds2D b = new Bounds2D(vBHeight, bCenter.distanceFrom(bV1), bCenter.distanceFrom(bV2), bCenter);
 
-        assertTrue(b.touchedBy(a));
-        assertTrue(a.touchedBy(b));
+        assertTrue(b.touchedBy(a), "a");
+        assertTrue(a.touchedBy(b), "b");
     }
 
     @Test
     void  notTouchedTest() {
-        Point2D aCenter = new Point2D(3, 15);
-        Vector2D vAHeight = new Vector2D(aCenter, new Point2D(0,15));
-        Vector2D aPerp = new Vector2D(aCenter, new Point2D(5,15));
-        Bounds2D a = new Bounds2D(vAHeight, vAHeight.magnitude(), aPerp.magnitude(), aCenter);
+        Point2D aCenter = new Point2D(3, 8);
+        Point2D aV1 = new Point2D(0, 11);
+        Point2D aV2 = new Point2D(5, 10);
+        Vector2D vAHeight = new Vector2D(aCenter, aV1);
+        Bounds2D a = new Bounds2D(vAHeight, aCenter.distanceFrom(aV1), aCenter.distanceFrom(aV2), aCenter);
 
-        Point2D bCenter = new Point2D(6, 2);
-        Vector2D vBHeight = new Vector2D(bCenter, new Point2D(2,2));
-        Vector2D bPerp = new Vector2D(bCenter, new Point2D(6,4));
-        Bounds2D b = new Bounds2D(vBHeight, vBHeight.magnitude(), bPerp.magnitude(), bCenter);
+        Point2D bCenter = new Point2D(16, 2);
+        Point2D bV1 = new Point2D(12, 2);
+        Point2D bV2 = new Point2D(16, 4);
+        Vector2D vBHeight = new Vector2D(aCenter, aV1);
+        Bounds2D b = new Bounds2D(vBHeight, bCenter.distanceFrom(bV1), bCenter.distanceFrom(bV2), bCenter);
 
-        assertFalse(a.touchedBy(b));
+        assertFalse(b.touchedBy(a), "a");
+        assertFalse(a.touchedBy(b), "b");
     }
 
 
