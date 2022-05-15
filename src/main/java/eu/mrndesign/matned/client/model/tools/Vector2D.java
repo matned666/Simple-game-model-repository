@@ -41,14 +41,6 @@ public class Vector2D extends Point2D{
         y /= length;
     }
 
-    public Vector2D normalizedAsNew(){
-        Vector2D result = new Vector2D(this);
-        double magnitude = this.magnitude();
-        result.x /= magnitude;
-        result.y /= magnitude;
-        return result;
-    }
-
     public static Vector2D normalized(Vector2D v){
         Vector2D result = new Vector2D(v);
         double magnitude = v.magnitude();
@@ -100,7 +92,11 @@ public class Vector2D extends Point2D{
     }
 
     public double dot(Point2D v) {
-        return Math.abs(v.x * x  + v.y * y );
+        Vector2D thisNorm = new Vector2D(this);
+        if (magnitude() != 1) {
+            thisNorm.normalize();
+        }
+        return v.x * thisNorm.x  + v.y * thisNorm.y;
     }
 
     public double magnitude(){
@@ -131,13 +127,6 @@ public class Vector2D extends Point2D{
                 '}';
     }
 
-    public Vector2D withLength(double length) {
-        normalize();
-        Point2D end = Point2D.zero();
-        end.move(this, length);
-        return new Vector2D(end);
-    }
-
     public Vector2D added(Vector2D added) {
         Vector2D result = new Vector2D(this);
         result.add(added);
@@ -156,9 +145,4 @@ public class Vector2D extends Point2D{
         return new Vector2D(point);
     }
 
-    public Vector2D multiplied(Vector2D vNorm) {
-        Vector2D v = new Vector2D(this);
-        v.multiply(vNorm);
-        return v;
-    }
 }

@@ -33,8 +33,7 @@ public class Bounds2D {
 	}
 
 	public boolean isNoGapForVector(Vector2D givenVector, Bounds2D b){
-        double distanceBetweenShapes = center.distanceFrom(b.center);
-        Vector2D v = givenVector.normalizedAsNew();
+        Vector2D v = givenVector.newNormalized();
         double[] thisDots = new double[]{
             v.dot(getTopRight()),
             v.dot(getTopLeft()),
@@ -42,10 +41,10 @@ public class Bounds2D {
             v.dot(getBottomLeft())
         };
         double[] bDots = new double[]{
-            v.dot(b.getTopRight()) + distanceBetweenShapes,
-            v.dot(b.getTopLeft()) + distanceBetweenShapes,
-            v.dot(b.getBottomRight()) + distanceBetweenShapes,
-            v.dot(b.getBottomLeft()) + distanceBetweenShapes
+            v.dot(b.getTopRight()),
+            v.dot(b.getTopLeft()),
+            v.dot(b.getBottomRight()),
+            v.dot(b.getBottomLeft())
         };
 
 		double thisMin = Arrays.stream(thisDots).min().getAsDouble();
@@ -61,8 +60,10 @@ public class Bounds2D {
 	}
 
 	public Point2D getTopLeft() {
-		return getCornerPointPoint(1, -1);
-	}
+		Point2D result = new Point2D(center);
+		result.move(vector, height/2);
+		result.move(getPerpVector(), -width/2);
+		return result;	}
 
 	public Point2D getBottomRight() {
 		return getCornerPointPoint(-1, 1);
@@ -74,8 +75,8 @@ public class Bounds2D {
 
 	public Point2D getCornerPointPoint(int modY, int modX) {
 		Point2D result = new Point2D(center);
-		result.move(vector, height / 2 * modY);
-		result.move(getPerpVector(), width / 2 * modX);
+		result.move(vector, height/2 * modY);
+		result.move(getPerpVector(), width/2 * modX);
 		return result;
 	}
 
@@ -107,21 +108,24 @@ public class Bounds2D {
 
 	public Vector2D getPerpVector() {
 		Vector2D result = new Vector2D(vector);
-		result.rotate(90);
+		result.x = -vector.y;
+		result.y = vector.x;
 		return result;
 	}
 
 	public Vector2D getCounterVector() {
 		Vector2D result = new Vector2D(vector);
-		result.rotate(180);
+		result.x *= -1;
+		result.y *= -1;
 		return result;
 	}
 
 	public Vector2D getCounterPerpVector() {
 		Vector2D result = new Vector2D(vector);
-		result.rotate(270);
-		return result;
-	}
+		result.x = vector.y;
+		result.y = -vector.x;
+		return result;	}
+
 
 	public void setVector(Vector2D vector) {
 		this.vector = vector;

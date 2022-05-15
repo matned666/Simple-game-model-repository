@@ -44,15 +44,13 @@ class Bounds2DTest {
 					   double bCenterX, double bCenterY, double bV1X, double bV1Y, double bV2X, double bV2Y, boolean isTouched) {
 		// given
 		Point2D aCenter = new Point2D(aCenterX, aCenterY);
-		Point2D aV1 = new Point2D(aV1X, aV1Y);
-		Point2D aV2 = new Point2D(aV2X, aV2Y);
-		Vector2D vAHeight = new Vector2D(aCenter, aV1);
-		Bounds2D a = new Bounds2D(vAHeight, aCenter.distanceFrom(aV1), aCenter.distanceFrom(aV2), aCenter);
+		Vector2D aV1 = new Vector2D(aV1X, aV1Y);
+		Vector2D aV2 = new Vector2D(aV2X, aV2Y);
+		Bounds2D a = new Bounds2D(aV1, aV2.magnitude()*2, aV1.magnitude()*2, aCenter);
 		Point2D bCenter = new Point2D(bCenterX, bCenterY);
-		Point2D bV1 = new Point2D(bV1X, bV1Y);
-		Point2D bV2 = new Point2D(bV2X, bV2Y);
-		Vector2D vBHeight = new Vector2D(aCenter, aV1);
-		Bounds2D b = new Bounds2D(vBHeight, bCenter.distanceFrom(bV1), bCenter.distanceFrom(bV2), bCenter);
+		Vector2D bV1 = new Vector2D(bV1X, bV1Y);
+		Vector2D bV2 = new Vector2D(bV2X, bV2Y);
+		Bounds2D b = new Bounds2D(bV1, bV2.magnitude()*2, bV1.magnitude()*2, bCenter);
 		// when
 		boolean conditionA = b.touchedBy(a);
 		boolean conditionB = a.touchedBy(b);
@@ -60,5 +58,49 @@ class Bounds2DTest {
 		assertEquals(conditionA, isTouched);
 		assertEquals(conditionB, isTouched);
 	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = {"isTouchedTestSingle.csv"}, useHeadersInDisplayName = true)
+	void isTouchedTestSingle(double aCenterX, double aCenterY, double aV1X, double aV1Y, double aV2X, double aV2Y,
+							 double bCenterX, double bCenterY, double bV1X, double bV1Y, double bV2X, double bV2Y, boolean isTouched) {
+		// given
+		Point2D aCenter = new Point2D(aCenterX, aCenterY);
+		Vector2D aV1 = new Vector2D(aV1X, aV1Y);
+		Vector2D aV2 = new Vector2D(aV2X, aV2Y);
+		Bounds2D a = new Bounds2D(aV1, aV2.magnitude()*2, aV1.magnitude()*2, aCenter);
+		Point2D bCenter = new Point2D(bCenterX, bCenterY);
+		Vector2D bV1 = new Vector2D(bV1X, bV1Y);
+		Vector2D bV2 = new Vector2D(bV2X, bV2Y);
+		Bounds2D b = new Bounds2D(bV1, bV2.magnitude()*2, bV1.magnitude()*2, bCenter);
+		// when
+		boolean conditionA = b.touchedBy(a);
+		boolean conditionB = a.touchedBy(b);
+		// then
+		assertEquals(conditionA, isTouched);
+		assertEquals(conditionB, isTouched);
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = {"Bounds2DCornerPointsTest.csv"}, useHeadersInDisplayName = true)
+	void cornerPointsTest(double vX, double vY, double cX, double cY, double h, double w, double tlX, double tlY, double trX, double trY, double brX, double brY, double blX, double blY){
+		Vector2D boundsVector = new Vector2D(vX, vY);
+		Point2D boundsCenter = new Point2D(cX, cY);
+		Bounds2D bounds2D = new Bounds2D(boundsVector, w, h,boundsCenter);
+
+		Point2D topLeftExpected = new Point2D(tlX, tlY);
+		Point2D topRightExpected = new Point2D(trX, trY);
+		Point2D bottomLeftExpected = new Point2D(blX, blY);
+		Point2D bottomRightExpected = new Point2D(brX, brY);
+
+		assertEquals(bounds2D.getTopLeft(), topLeftExpected, "topLeftExpected");
+		assertEquals(bounds2D.getTopRight(), topRightExpected, "topRightExpected");
+		assertEquals(bounds2D.getBottomLeft(), bottomLeftExpected, "bottomLeftExpected");
+		assertEquals(bounds2D.getBottomRight(), bottomRightExpected, "bottomRightExpected");
+
+
+
+	}
+
+
 
 }

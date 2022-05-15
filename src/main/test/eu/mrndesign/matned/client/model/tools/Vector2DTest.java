@@ -1,6 +1,8 @@
 package eu.mrndesign.matned.client.model.tools;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -218,10 +220,17 @@ class Vector2DTest {
         Vector2D vRotated = v1.rotated(90);
 
         System.out.println(v2.angleTo(vRotated));
+    }
 
+    @ParameterizedTest
+    @CsvFileSource(resources = {"dotProduct.csv"}, useHeadersInDisplayName = true)
+    void dotProductTests(double vX, double vY, double pX, double pY, double result){
+        Vector2D v = new Vector2D(vX, vY);
+        Point2D p = new Point2D(pX, pY);
 
+        double dot = v.dot(p);
 
-
+        assertEquals(dot, result, 0.001);
     }
 
 

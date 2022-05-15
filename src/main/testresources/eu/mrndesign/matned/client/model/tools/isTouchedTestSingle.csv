@@ -1,0 +1,2 @@
+aCenterX,aCenterY, vX,vY, height,width, bCenterX,bCenterY, bVX,bVY, bHeight,bWidth, isTouched
+3.5,10, 2.5,0, 0,2, 7,4, 3,0, 0,2, false
