@@ -41,6 +41,14 @@ public class Vector2D extends Point2D{
         y /= length;
     }
 
+    public Vector2D normalizedAsNew(){
+        Vector2D result = new Vector2D(this);
+        double magnitude = this.magnitude();
+        result.x /= magnitude;
+        result.y /= magnitude;
+        return result;
+    }
+
     public static Vector2D normalized(Vector2D v){
         Vector2D result = new Vector2D(v);
         double magnitude = v.magnitude();
@@ -89,6 +97,10 @@ public class Vector2D extends Point2D{
     public double dot(Vector2D v) {
         double magnitude = magnitude();
         return Math.abs(v.x * x / magnitude + v.y * y / magnitude);
+    }
+
+    public double dot(Point2D v) {
+        return Math.abs(v.x * x  + v.y * y );
     }
 
     public double magnitude(){

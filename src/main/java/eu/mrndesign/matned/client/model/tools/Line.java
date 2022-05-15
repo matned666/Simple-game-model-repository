@@ -1,5 +1,7 @@
 package eu.mrndesign.matned.client.model.tools;
 
+import java.awt.geom.Line2D;
+
 public class Line {
 
     private Point2D a;
@@ -40,5 +42,11 @@ public class Line {
             double y = (a1*c2 - a2*c1)/determinant;
             return new Point2D(x, y);
         }
+    }
+
+    public boolean segmentIntersect(Line lineB) {
+        Line2D line1 = new Line2D.Float((float)a.x, (float)a.y, (float)b.x, (float)b.y);
+        Line2D line2 = new Line2D.Float((float)lineB.a.x, (float)lineB.a.y, (float)lineB.b.x, (float)lineB.b.y);
+        return line2.intersectsLine(line1);
     }
 }

@@ -125,4 +125,9 @@ public class Point2D {
     public double distanceFrom(double x, double y) {
         return Math.sqrt((x - this.x) * (x - this.x) + (y - this.y) * (y - this.y));
     }
+
+    public Point2D moved(Vector2D v) {
+        move(v);
+        return this;
+    }
 }
