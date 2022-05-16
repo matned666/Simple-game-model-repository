@@ -1,20 +1,26 @@
-package eu.mrndesign.matned.client.model.game.object.element;
+package eu.mrndesign.matned.client.model.game.object.element.obj;
 
 import eu.mrndesign.matned.client.model.game.object.CanvasModel;
 import eu.mrndesign.matned.client.model.game.object.GameElement;
 import eu.mrndesign.matned.client.model.game.object.GameElementType;
+import eu.mrndesign.matned.client.model.game.object.element.Enemy;
 import eu.mrndesign.matned.client.model.tools.Bounds2D;
+import eu.mrndesign.matned.client.model.tools.Math2D;
 import eu.mrndesign.matned.client.model.tools.Point2D;
 import eu.mrndesign.matned.client.model.tools.Vector2D;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static eu.mrndesign.matned.client.controller.Constants.PANEL_HEIGHT_INT;
 import static eu.mrndesign.matned.client.controller.Constants.PANEL_WIDTH_INT;
 
-public class Putin extends GameElement {
+public class Putin extends Enemy {
+
+    public static GameElement enemy(GameElement referenceElement, CanvasModel canvasModel, int hp, int hit) {
+        return new Putin(Math2D.randomInt(1, 6), referenceElement, canvasModel, hp, hit);
+    }
+
 
     private List<String> frames;
 
@@ -23,7 +29,7 @@ public class Putin extends GameElement {
         frames = Arrays.asList("img/stone1.png", "img/stone2.png", "img/stone3.png", "img/stone4.png", "img/stone5.png", "img/stone4.png", "img/stone3.png", "img/stone2.png");
         Point2D point2D = Point2D.randomPointOnEdge(30, PANEL_WIDTH_INT, PANEL_HEIGHT_INT);
         Vector2D v = new Vector2D(point2D, Point2D.zero());
-        bounds = new Bounds2D(v, 30, 80, point2D);
+        bounds = new Bounds2D(v, 30, 150, point2D);
     }
 
     @Override
@@ -52,7 +58,7 @@ public class Putin extends GameElement {
 
     @Override
     public GameElementType getType() {
-        return GameElementType.ROCK;
+        return GameElementType.ENEMY;
     }
 
     @Override

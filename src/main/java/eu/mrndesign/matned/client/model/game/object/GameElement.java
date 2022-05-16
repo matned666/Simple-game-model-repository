@@ -70,7 +70,7 @@ public abstract class GameElement {
     }
 
     protected boolean isInBounds(GameElement gameElement) {
-        return bounds.touchedBy(gameElement.bounds);
+        return bounds.isCollisionWith(gameElement.bounds);
     }
 
     public void move() {
@@ -83,6 +83,10 @@ public abstract class GameElement {
 
     public String getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Bounds2D getBounds() {

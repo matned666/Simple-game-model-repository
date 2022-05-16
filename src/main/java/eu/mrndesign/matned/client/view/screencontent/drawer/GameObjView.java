@@ -4,7 +4,6 @@ import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.Image;
 import eu.mrndesign.matned.client.controller.TimeWrapper;
 import eu.mrndesign.matned.client.model.game.object.GameElement;
-import eu.mrndesign.matned.client.model.game.object.element.BreakBear;
 
 import java.util.ArrayList;
 import java.util.List;

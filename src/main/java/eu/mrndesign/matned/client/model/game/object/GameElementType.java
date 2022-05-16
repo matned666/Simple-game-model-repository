@@ -5,5 +5,5 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import java.io.Serializable;
 
 public enum GameElementType  implements Serializable, IsSerializable {
-    HERO, ROCK, BULLET, BACKGROUND, BLOW, PICTURE
+    HERO, ENEMY, WEAPON, BACKGROUND, BLOW, PICTURE
 }

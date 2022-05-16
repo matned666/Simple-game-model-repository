@@ -1,6 +1,10 @@
 package eu.mrndesign.matned.client.model.game.object;
 
 import eu.mrndesign.matned.client.controller.TimeWrapper;
+import eu.mrndesign.matned.client.model.game.object.element.Weapon;
+import eu.mrndesign.matned.client.model.game.object.element.obj.Blow;
+import eu.mrndesign.matned.client.model.game.object.element.obj.Bullet;
+import eu.mrndesign.matned.client.model.game.object.element.obj.StarShip;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
@@ -20,9 +24,13 @@ public class Game {
     private final CanvasModel canvasModel;
 
     private GameElement hero;
+    private Weapon actualWeapon;
+
     private long activatedFrameNo = 0;
 
     private boolean newEnemy = false;
+
+//    private final GameConfig gameConfig;
 
     private final Subject<Boolean> refreshSubject = PublishSubject.create();
     private final Subject<Boolean> bulletsRefreshSubject = PublishSubject.create();
@@ -40,6 +48,7 @@ public class Game {
         initBulletSubscription();
         initBlowSubscription();
         initGameElements();
+//        gameConfig = new GameConfig(hero, )
     }
 
     private void initRefreshSubscriptionSubscription() {
@@ -48,7 +57,7 @@ public class Game {
                 gameElement.refresh();
                 if ((gameElement.isToRemove())) {
                     removeElement(gameElement.id);
-                    if (gameElement.getType() == GameElementType.ROCK) {
+                    if (gameElement.getType() == GameElementType.ENEMY) {
                         newEnemy = true;
                     }
                 }
@@ -61,7 +70,7 @@ public class Game {
         bulletsRefreshSubject.map(onNext -> {
             mapIdToBullet.values().forEach(bullet ->
                     mapIdToRock.values().forEach(rock -> {
-                        if (rock.bounds.touchedBy(bullet.bounds)) {
+                        if (rock.bounds.isCollisionWith(bullet.bounds)) {
                             bullet.setToRemove();
                             rock.setToRemove();
                             mapIdToRock.remove(rock.getId());
@@ -122,19 +131,19 @@ public class Game {
     }
 
     private void addHero() {
-        hero = GameElementsFactory.hero(canvasModel);
+        hero = StarShip.hero(canvasModel);
         mapIdToGameElement.put(hero.id, hero);
     }
 
     public void addNewEnemy() {
-        GameElement rock = GameElementsFactory.enemy( hero, canvasModel, 10, 10); // TODO temporary hp and hit
+        GameElement rock = GameElementsFactory.getEnemy( hero, canvasModel, 10, 10); // TODO temporary hp and hit
         mapIdToGameElement.put(rock.id, rock);
         mapIdToRock.put(rock.getId(), rock);
     }
 
     void fireBullet() {
         if (TimeWrapper.getInstance().getFrameNo() - activatedFrameNo > 20) {
-            GameElement bullet = GameElementsFactory.bullet(hero.getVector(), hero.getBounds(), canvasModel);
+            GameElement bullet = Bullet.bullet20x20(hero.getVector(), hero.getBounds(), canvasModel);
             mapIdToGameElement.put(bullet.getId(), bullet);
             mapIdToBullet.put(bullet.getId(), bullet);
             activatedFrameNo = TimeWrapper.getInstance().getFrameNo();
@@ -147,7 +156,7 @@ public class Game {
     }
 
     private void blow(GameElement ge) {
-        GameElement blow = GameElementsFactory.blow(ge.getVector(), ge.getBounds(), canvasModel);
+        GameElement blow = Blow.blow20x30(ge.getVector(), ge.getBounds(), canvasModel);
         mapIdToGameElement.put(blow.id, blow);
     }
 

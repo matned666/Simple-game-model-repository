@@ -145,4 +145,26 @@ public class Vector2D extends Point2D{
         return new Vector2D(point);
     }
 
+    public Vector2D getPerpVector() {
+        Vector2D result = new Vector2D(this);
+        result.x = -y;
+        result.y = x;
+        return result;
+    }
+
+    public Vector2D getCounterVector() {
+        Vector2D result = new Vector2D(this);
+        result.x *= -1;
+        result.y *= -1;
+        return result;
+    }
+
+    public Vector2D getCounterPerpVector() {
+        Vector2D result = new Vector2D(this);
+        result.x = y;
+        result.y = -x;
+        return result;
+    }
+
+
 }

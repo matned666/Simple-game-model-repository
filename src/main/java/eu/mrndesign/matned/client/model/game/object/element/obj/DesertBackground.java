@@ -1,12 +1,13 @@
-package eu.mrndesign.matned.client.model.game.object.element;
+package eu.mrndesign.matned.client.model.game.object.element.obj;
 
 import eu.mrndesign.matned.client.model.game.object.GameElement;
 import eu.mrndesign.matned.client.model.game.object.GameElementType;
+import eu.mrndesign.matned.client.model.game.object.element.Landscape;
 
 import java.util.Collections;
 import java.util.List;
 
-public class DesertBackground extends GameElement {
+public class DesertBackground extends Landscape {
 
 
     public DesertBackground() {

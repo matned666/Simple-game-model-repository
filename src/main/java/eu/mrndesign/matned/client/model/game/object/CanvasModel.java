@@ -2,7 +2,7 @@ package eu.mrndesign.matned.client.model.game.object;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import eu.mrndesign.matned.client.model.Model;
-import eu.mrndesign.matned.client.model.game.object.element.DesertBackground;
+import eu.mrndesign.matned.client.model.game.object.element.obj.DesertBackground;
 import eu.mrndesign.matned.client.model.tools.Bounds2D;
 import eu.mrndesign.matned.client.model.tools.Point2D;
 import eu.mrndesign.matned.client.model.tools.Vector2D;

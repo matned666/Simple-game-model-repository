@@ -1,4 +1,4 @@
-package eu.mrndesign.matned.client.model.game.object.element;
+package eu.mrndesign.matned.client.model.game.object.element.obj;
 
 import static eu.mrndesign.matned.client.controller.Constants.PANEL_HEIGHT_INT;
 import static eu.mrndesign.matned.client.controller.Constants.PANEL_WIDTH_INT;
@@ -9,11 +9,16 @@ import java.util.List;
 import eu.mrndesign.matned.client.model.game.object.CanvasModel;
 import eu.mrndesign.matned.client.model.game.object.GameElement;
 import eu.mrndesign.matned.client.model.game.object.GameElementType;
+import eu.mrndesign.matned.client.model.game.object.element.Hero;
 import eu.mrndesign.matned.client.model.tools.Bounds2D;
 import eu.mrndesign.matned.client.model.tools.Point2D;
 import eu.mrndesign.matned.client.model.tools.Vector2D;
 
-public class StarShip extends GameElement {
+public class StarShip extends Hero {
+
+    public static GameElement hero(CanvasModel canvasModel) {
+        return new StarShip(canvasModel);
+    }
 
     private boolean launched;
 

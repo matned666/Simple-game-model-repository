@@ -23,29 +23,40 @@ public class Bounds2D {
 		return center.x < 0 || center.x > PANEL_WIDTH_INT || center.y < 0 || center.y > PANEL_HEIGHT_INT;
 	}
 
-	public boolean touchedBy(Bounds2D b) {
-        return isNoGapForBounds(b) && b.isNoGapForBounds(this);
-    }
-
-	private boolean isNoGapForBounds(Bounds2D b) {
-		return isNoGapForVector(vector, b) && isNoGapForVector(getPerpVector(), b)
-				&& isNoGapForVector(getCounterVector(), b) && isNoGapForVector(getCounterPerpVector(), b);
+	public boolean isCollisionWith(Bounds2D b) {
+		Point2D thisP1 = getTopLeft();
+		Point2D thisP2 = getTopRight();
+		Point2D thisP3 = getBottomLeft();
+		Point2D thisP4 = getBottomRight();
+		Point2D bP1 = b.getTopLeft();
+		Point2D bP2 = b.getTopRight();
+		Point2D bP3 = b.getBottomLeft();
+		Point2D bP4 = b.getBottomRight();
+		Vector2D thisPerpV = vector.getPerpVector();
+		Vector2D thisCounterV = vector.getCounterVector();
+		Vector2D thisCounterPerpV = vector.getCounterPerpVector();
+		Vector2D bPerpV = b.vector.getPerpVector();
+		Vector2D bCounterV = b.vector.getCounterVector();
+		Vector2D bCounterPerpV = b.vector.getCounterPerpVector();
+		return isNoGapForBounds(thisPerpV, thisCounterV, thisCounterPerpV, thisP1, thisP2, thisP3, thisP4, bP1, bP2,
+				bP3, bP4)
+				&& b.isNoGapForBounds(bPerpV, bCounterV, bCounterPerpV, bP1, bP2, bP3, bP4, thisP1, thisP2, thisP3,
+						thisP4);
 	}
 
-	public boolean isNoGapForVector(Vector2D givenVector, Bounds2D b){
-        Vector2D v = givenVector.newNormalized();
-        double[] thisDots = new double[]{
-            v.dot(getTopRight()),
-            v.dot(getTopLeft()),
-            v.dot(getBottomRight()),
-            v.dot(getBottomLeft())
-        };
-        double[] bDots = new double[]{
-            v.dot(b.getTopRight()),
-            v.dot(b.getTopLeft()),
-            v.dot(b.getBottomRight()),
-            v.dot(b.getBottomLeft())
-        };
+	private boolean isNoGapForBounds(Vector2D perpV, Vector2D counterV, Vector2D counterPerpV, Point2D thisP1,
+			Point2D thisP2, Point2D thisP3, Point2D thisP4, Point2D bP1, Point2D bP2, Point2D bP3, Point2D bP4) {
+		return isNoGapForVector(vector, thisP1, thisP2, thisP3, thisP4, bP1, bP2, bP3, bP4)
+				&& isNoGapForVector(perpV, thisP1, thisP2, thisP3, thisP4, bP1, bP2, bP3, bP4)
+				&& isNoGapForVector(counterV, thisP1, thisP2, thisP3, thisP4, bP1, bP2, bP3, bP4)
+				&& isNoGapForVector(counterPerpV, thisP1, thisP2, thisP3, thisP4, bP1, bP2, bP3, bP4);
+	}
+
+	private boolean isNoGapForVector(Vector2D givenVector, Point2D thisP1, Point2D thisP2, Point2D thisP3,
+			Point2D thisP4, Point2D bP1, Point2D bP2, Point2D bP3, Point2D bP4) {
+		Vector2D v = givenVector.newNormalized();
+		double[] thisDots = new double[]{v.dot(thisP1), v.dot(thisP2), v.dot(thisP3), v.dot(thisP4)};
+		double[] bDots = new double[]{v.dot(bP1), v.dot(bP2), v.dot(bP3), v.dot(bP4)};
 
 		double thisMin = Arrays.stream(thisDots).min().getAsDouble();
 		double thisMax = Arrays.stream(thisDots).max().getAsDouble();
@@ -53,17 +64,15 @@ public class Bounds2D {
 		double bMax = Arrays.stream(bDots).max().getAsDouble();
 
 		return thisMin - bMax <= 0 && bMin - thisMax <= 0;
-    }
+	}
 
 	public Point2D getTopRight() {
 		return getCornerPointPoint(1, 1);
 	}
 
 	public Point2D getTopLeft() {
-		Point2D result = new Point2D(center);
-		result.move(vector, height/2);
-		result.move(getPerpVector(), -width/2);
-		return result;	}
+		return getCornerPointPoint(1, -1);
+	}
 
 	public Point2D getBottomRight() {
 		return getCornerPointPoint(-1, 1);
@@ -75,8 +84,8 @@ public class Bounds2D {
 
 	public Point2D getCornerPointPoint(int modY, int modX) {
 		Point2D result = new Point2D(center);
-		result.move(vector, height/2 * modY);
-		result.move(getPerpVector(), width/2 * modX);
+		result.move(vector, height / 2 * modY);
+		result.move(vector.getPerpVector(), width / 2 * modX);
 		return result;
 	}
 
@@ -105,27 +114,6 @@ public class Bounds2D {
 	public Vector2D getVector() {
 		return vector;
 	}
-
-	public Vector2D getPerpVector() {
-		Vector2D result = new Vector2D(vector);
-		result.x = -vector.y;
-		result.y = vector.x;
-		return result;
-	}
-
-	public Vector2D getCounterVector() {
-		Vector2D result = new Vector2D(vector);
-		result.x *= -1;
-		result.y *= -1;
-		return result;
-	}
-
-	public Vector2D getCounterPerpVector() {
-		Vector2D result = new Vector2D(vector);
-		result.x = vector.y;
-		result.y = -vector.x;
-		return result;	}
-
 
 	public void setVector(Vector2D vector) {
 		this.vector = vector;

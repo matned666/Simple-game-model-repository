@@ -14,7 +14,7 @@ import eu.mrndesign.matned.client.controller.Constants;
 import eu.mrndesign.matned.client.controller.Controller;
 import eu.mrndesign.matned.client.controller.TimeWrapper;
 import eu.mrndesign.matned.client.model.game.object.GameElement;
-import eu.mrndesign.matned.client.model.game.object.element.BreakBear;
+import eu.mrndesign.matned.client.model.game.object.element.obj.BreakBear;
 import eu.mrndesign.matned.client.model.tools.Log;
 import eu.mrndesign.matned.client.view.screencontent.drawer.GameObjView;
 import io.reactivex.subjects.PublishSubject;

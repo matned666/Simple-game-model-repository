@@ -14,28 +14,10 @@ class Bounds2DTest {
 		Vector2D vector = new Vector2D(0, 1);
 		Bounds2D box = new Bounds2D(vector, 10, 10, new Point2D(0, 0));
 		Bounds2D touch = new Bounds2D(vector, 4, 4, new Point2D(5, 0));
-		assertTrue(box.touchedBy(touch), "try 1");
+		assertTrue(box.isCollisionWith(touch), "try 1");
 
 		touch.setCenter(4, -5);
-		assertTrue(box.touchedBy(touch), "try 1");
-	}
-
-	@Test
-	void anotherTouchedTest() {
-		Point2D aCenter = new Point2D(3, 8);
-		Point2D aV1 = new Point2D(0, 11);
-		Point2D aV2 = new Point2D(5, 10);
-		Vector2D vAHeight = new Vector2D(aCenter, aV1);
-		Bounds2D a = new Bounds2D(vAHeight, aCenter.distanceFrom(aV1), aCenter.distanceFrom(aV2), aCenter);
-
-		Point2D bCenter = new Point2D(6, 2);
-		Point2D bV1 = new Point2D(2, 2);
-		Point2D bV2 = new Point2D(6, 4);
-		Vector2D vBHeight = new Vector2D(aCenter, aV1);
-		Bounds2D b = new Bounds2D(vBHeight, bCenter.distanceFrom(bV1), bCenter.distanceFrom(bV2), bCenter);
-
-		assertTrue(b.touchedBy(a), "a");
-		assertTrue(a.touchedBy(b), "b");
+		assertTrue(box.isCollisionWith(touch), "try 1");
 	}
 
 	@ParameterizedTest
@@ -52,8 +34,8 @@ class Bounds2DTest {
 		Vector2D bV2 = new Vector2D(bV2X, bV2Y);
 		Bounds2D b = new Bounds2D(bV1, bV2.magnitude()*2, bV1.magnitude()*2, bCenter);
 		// when
-		boolean conditionA = b.touchedBy(a);
-		boolean conditionB = a.touchedBy(b);
+		boolean conditionA = b.isCollisionWith(a);
+		boolean conditionB = a.isCollisionWith(b);
 		// then
 		assertEquals(conditionA, isTouched);
 		assertEquals(conditionB, isTouched);
@@ -73,8 +55,8 @@ class Bounds2DTest {
 		Vector2D bV2 = new Vector2D(bV2X, bV2Y);
 		Bounds2D b = new Bounds2D(bV1, bV2.magnitude()*2, bV1.magnitude()*2, bCenter);
 		// when
-		boolean conditionA = b.touchedBy(a);
-		boolean conditionB = a.touchedBy(b);
+		boolean conditionA = b.isCollisionWith(a);
+		boolean conditionB = a.isCollisionWith(b);
 		// then
 		assertEquals(conditionA, isTouched);
 		assertEquals(conditionB, isTouched);
