@@ -1,6 +1,8 @@
 package eu.mrndesign.matned.client.model.tools;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static eu.mrndesign.matned.client.controller.Constants.PANEL_HEIGHT_INT;
 import static eu.mrndesign.matned.client.controller.Constants.PANEL_WIDTH_INT;
@@ -24,46 +26,32 @@ public class Bounds2D {
 	}
 
 	public boolean isCollisionWith(Bounds2D b) {
-		Point2D thisP1 = getTopLeft();
-		Point2D thisP2 = getTopRight();
-		Point2D thisP3 = getBottomLeft();
-		Point2D thisP4 = getBottomRight();
-		Point2D bP1 = b.getTopLeft();
-		Point2D bP2 = b.getTopRight();
-		Point2D bP3 = b.getBottomLeft();
-		Point2D bP4 = b.getBottomRight();
-		Vector2D thisPerpV = vector.getPerpVector();
-		Vector2D thisCounterV = vector.getCounterVector();
-		Vector2D thisCounterPerpV = vector.getCounterPerpVector();
-		Vector2D bPerpV = b.vector.getPerpVector();
-		Vector2D bCounterV = b.vector.getCounterVector();
-		Vector2D bCounterPerpV = b.vector.getCounterPerpVector();
-		return isNoGapForBounds(thisPerpV, thisCounterV, thisCounterPerpV, thisP1, thisP2, thisP3, thisP4, bP1, bP2,
-				bP3, bP4)
-				&& b.isNoGapForBounds(bPerpV, bCounterV, bCounterPerpV, bP1, bP2, bP3, bP4, thisP1, thisP2, thisP3,
-						thisP4);
+		List<Point2D> thisPoints = getPoints();
+		List<Point2D> bPoints = b.getPoints();
+		List<Vector2D> thisVectors = getVectors();
+		List<Vector2D> bVectors = b.getVectors();
+		if (thisVectors.stream().allMatch(v-> isNoGapOnShadow(v, thisPoints, bPoints))){
+			return bVectors.stream().allMatch(v-> isNoGapOnShadow(v, bPoints, thisPoints));
+		}
+		return false;
 	}
 
-	private boolean isNoGapForBounds(Vector2D perpV, Vector2D counterV, Vector2D counterPerpV, Point2D thisP1,
-			Point2D thisP2, Point2D thisP3, Point2D thisP4, Point2D bP1, Point2D bP2, Point2D bP3, Point2D bP4) {
-		return isNoGapForVector(vector, thisP1, thisP2, thisP3, thisP4, bP1, bP2, bP3, bP4)
-				&& isNoGapForVector(perpV, thisP1, thisP2, thisP3, thisP4, bP1, bP2, bP3, bP4)
-				&& isNoGapForVector(counterV, thisP1, thisP2, thisP3, thisP4, bP1, bP2, bP3, bP4)
-				&& isNoGapForVector(counterPerpV, thisP1, thisP2, thisP3, thisP4, bP1, bP2, bP3, bP4);
-	}
-
-	private boolean isNoGapForVector(Vector2D givenVector, Point2D thisP1, Point2D thisP2, Point2D thisP3,
-			Point2D thisP4, Point2D bP1, Point2D bP2, Point2D bP3, Point2D bP4) {
-		Vector2D v = givenVector.newNormalized();
-		double[] thisDots = new double[]{v.dot(thisP1), v.dot(thisP2), v.dot(thisP3), v.dot(thisP4)};
-		double[] bDots = new double[]{v.dot(bP1), v.dot(bP2), v.dot(bP3), v.dot(bP4)};
-
-		double thisMin = Arrays.stream(thisDots).min().getAsDouble();
-		double thisMax = Arrays.stream(thisDots).max().getAsDouble();
-		double bMin = Arrays.stream(bDots).min().getAsDouble();
-		double bMax = Arrays.stream(bDots).max().getAsDouble();
-
+	private boolean isNoGapOnShadow(Vector2D v, List<Point2D> thisPoints, List<Point2D> bPoints) {
+		List<Double> thisDots = thisPoints.stream().map(v::dot).collect(Collectors.toList());
+		List<Double> bDots = bPoints.stream().map(v::dot).collect(Collectors.toList());
+		double thisMin = thisDots.stream().min(Double::compareTo).get();
+		double thisMax = thisDots.stream().max(Double::compareTo).get();
+		double bMin = bDots.stream().min(Double::compareTo).get();
+		double bMax = bDots.stream().max(Double::compareTo).get();
 		return thisMin - bMax <= 0 && bMin - thisMax <= 0;
+	}
+
+	private List<Vector2D> getVectors() {
+		return Arrays.asList(vector, vector.getPerpVector(), vector.getCounterVector(), vector.getCounterPerpVector());
+	}
+
+	private List<Point2D> getPoints() {
+		return Arrays.asList(getTopLeft(), getTopRight(), getBottomLeft(), getBottomRight());
 	}
 
 	public Point2D getTopRight() {
