@@ -30,9 +30,6 @@ class CubicCurve2DTest {
         double actual1 = cubicCurve2D.calculateLength(4);
         double actual2 = cubicCurve2D.calculateLength(1000);
 
-        System.out.println("a1 with 10 samples: " + actual1);
-        System.out.println("a2 with 1000 samples: " + actual2);
-
         assertEquals(24.5, actual1, 0.1);
         assertEquals(24.5, actual2, 0.1);
     }

@@ -75,9 +75,9 @@ public class Point2D {
     }
 
     public void move(Vector2D v, double d) {
-        v.normalize();
-        x += v.getX() * d;
-        y += v.getY() * d;
+        Vector2D v2 = v.newNormalized();
+        x += v2.getX() * d;
+        y += v2.getY() * d;
     }
 
     public double getX() {

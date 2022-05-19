@@ -1,6 +1,8 @@
 package eu.mrndesign.matned.client.model.tools;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,6 +67,17 @@ class Point2DTest {
         double moveDist = 4;
         p.move(v, moveDist);
         assertEquals(new Point2D(2,-2), p);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"0,0,20,0,20", "1,1,11,11,14.1", "1,1,-9,-9,14.1", "1,1,-1,-1,2.8"})
+    void Should_ReturnResultDistanceBetweenPoints_When_PointDistanceFrom(double pX, double pY, double x, double y, double result){
+        Point2D p = new Point2D(pX, pY);
+
+        double distance = p.distanceFrom(x,y);
+
+        assertEquals(distance, result, 0.1);
+
     }
 
 

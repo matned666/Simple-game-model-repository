@@ -6,8 +6,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class Bounds2DTest {
+
+	@ParameterizedTest
+	@CsvSource({"0,0,1,0,10,10,false", "0,2000,1,0,10,10,true"})
+	void Should_ReturnResultValue_When_OutOfBounds(double centerX, double centerY, double vectorX, double vectorY, double width, double height, boolean result){
+		Point2D center = new Point2D(centerX, centerY);
+		Vector2D vector = new Vector2D(vectorX, vectorY);
+		Bounds2D bounds = new Bounds2D(vector, width, height, center);
+
+		assertEquals(result, bounds.isOutOfView());
+	}
 
 	@Test
 	void isTouched() {
